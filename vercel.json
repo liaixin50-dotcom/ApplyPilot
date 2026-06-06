@@ -2,34 +2,21 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+      "src": "public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/",
-      "dest": "/api/index.py"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/api/index.py"
+      "dest": "/public/$1"
     }
   ],
-  "env": {
-    "PYTHON_VERSION": "3.12"
-  },
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 10
-    }
-  },
   "github": {
-    "enabled": true,
-    "silent": true
-  }
+    "silent": true,
+    "autoAlias": true
+  },
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false
 }

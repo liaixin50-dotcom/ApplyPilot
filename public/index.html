@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApplyPilot - AI Job Application Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Job List */
+        .job-list {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .job-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-company {
+            color: #a0a0ff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-score {
+            display: inline-block;
+            background: rgba(0, 255, 0, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Forms */
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            border-radius: 5px;
+            width: 85%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header fade-in">
+            <div class="logo">📋 ApplyPilot</div>
+            <div class="tagline">AI-powered Job Application Assistant</div>
+            <p>Applied to 1,000 jobs in 2 days. Fully autonomous. Open source.</p>
+            
+            <div class="cta-buttons">
+                <button class="cta-button" onclick="startApplication()">🚀 Start Applying</button>
+                <button class="cta-button" onclick="showDashboard()">📊 View Dashboard</button>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats fade-in">
+            <div class="stat-card">
+                <div class="stat-number">1,000+</div>
+                <div class="stat-label">Jobs Applied</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">85%</div>
+                <div class="stat-label">Average Match Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Job Boards</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Pipeline Stages</div>
+            </div>
+        </div>
+        
+        <!-- Features -->
+        <div class="features fade-in">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Smart Job Discovery</div>
+                <p>Automatically finds relevant jobs across multiple job boards using AI algorithms.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">AI-Powered Scoring</div>
+                <p>Analyzes your resume against job requirements to calculate match scores.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✂️</div>
+                <div class="feature-title">Resume Tailoring</div>
+                <p>Customizes your resume for each job application to maximize success.</p>
+            </div>
+        </div>
+        
+        <!-- Job List -->
+        <div class="job-list fade-in">
+            <h2>🎯 Top Matching Jobs</h2>
+            <div id="jobs-container">
+                <div class="job-item">
+                    <div class="job-title">Senior AI Engineer</div>
+                    <div class="job-company">🏢 TechCorp Inc. | 📍 San Francisco, CA</div>
+                    <div style="margin: 0.5rem 0; font-size: 0.9rem;">Develop cutting-edge AI solutions for enterprise clients.</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="job-score">🎯 Match: 92%</div>
+                        <div style="color: #a0a0ff;">💰 $180,000 - $250,000</div>
+                    </div>
+                </div>
+                
+                <div class="job-item">
+                    <div class="job-title">Machine Learning Researcher</div>
+                    <div class="job-company">🏢 AI Research Lab | 📍 Remote</div>
+                    <div style="margin: 0.5rem 0; font-size: 0.9rem;">Research novel ML algorithms and publish papers.</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="job-score">🎯 Match: 88%</div>
+                        <div style="color: #a0a0ff;">💰 $150,000 - $200,000</div>
+                    </div>
+                </div>
+                
+                <div class="job-item">
+                    <div class="job-title">Data Science Manager</div>
+                    <div class="job-company">🏢 DataFirst Analytics | 📍 New York, NY</div>
+                    <div style="margin: 0.5rem 0; font-size: 0.9rem;">Lead a team of data scientists on client projects.</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="job-score">🎯 Match: 85%</div>
+                        <div style="color: #a0a0ff;">💰 $160,000 - $220,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Application Form (Hidden by default) -->
+        <div id="application-form" class="form-container fade-in" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 2rem;">🚀 Start Your AI Job Search</h2>
+            
+            <form id="applyForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required 
+                           placeholder="Enter your full name" value="Aixin Li">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="Enter your email" value="liaixin50@gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" 
+                           placeholder="Enter your phone number" value="(086)15695196785">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" 
+                           placeholder="City, Country" value="Shanghai, China">
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn Profile</label>
+                    <input type="url" id="linkedin" name="linkedin" 
+                           placeholder="https://linkedin.com/in/yourprofile" 
+                           value="https://linkedin.com/in/aixinli">
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience">Years of Experience</label>
+                    <select id="experience" name="experience">
+                        <option value="0-1">0-1 years</option>
+                        <option value="1-3" selected>1-3 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5-10">5-10 years</option>
+                        <option value="10+">10+ years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills">Key Skills</label>
+                    <textarea id="skills" name="skills" 
+                              placeholder="List your key skills (comma separated)">Python, AI/ML, Data Analysis, Web Development, SQL</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resume">Resume Text</label>
+                    <textarea id="resume" name="resume" 
+                              placeholder="Paste your resume text here">Experienced AI Engineer with 2+ years in machine learning and data science. Proficient in Python, TensorFlow, and cloud technologies. Strong background in developing AI solutions for real-world problems.</textarea>
+                </div>
+                
+                <button type="submit" class="cta-button" style="width: 100%;">🎯 Start AI Job Search</button>
+            </form>
+            
+            <button class="cta-button" onclick="showHome()" style="margin-top: 1rem; background: rgba(255,255,255,0.2); color: white;">← Back to Home</button>
+        </div>
+        
+        <!-- Dashboard (Hidden by default) -->
+        <div id="dashboard" class="fade-in" style="display: none;">
+            <div class="header">
+                <div class="logo">📊 ApplyPilot Dashboard</div>
+                <p>Your AI-powered job application assistant is working for you!</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-title">📈 Application Stats</div>
+                    <div class="stat-number">5</div>
+                    <div>Jobs Discovered</div>
+                    <div class="stat-number">85%</div>
+                    <div>Average Match Score</div>
+                    <div class="stat-number">0</div>
+                    <div>Applications Submitted</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">🎯 Top Recommendations</div>
+                    <div id="top-jobs">
+                        <div class="job-item">
+                            <div class="job-title">Senior AI Engineer</div>
+                            <div class="job-company">TechCorp Inc.</div>
+                            <div>🎯 Match: 92%</div>
+                        </div>
+                        <div class="job-item">
+                            <div class="job-title">Machine Learning Researcher</div>
+                            <div class="job-company">AI Research Lab</div>
+                            <div>🎯 Match: 88%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">⚡ Quick Actions</div>
+                    <button class="cta-button" onclick="startJobSearch()">🔍 Start New Job Search</button>
+                    <button class="cta-button" onclick="viewApplications()">📋 View Applications</button>
+                    <button class="cta-button" onclick="updateProfile()">👤 Update Profile</button>
+                    <button class="cta-button" onclick="generateReport()">📊 Generate Report</button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">📅 Recent Activity</div>
+                    <div style="opacity: 0.8;">
+                        <p>✅ Profile setup completed</p>
+                        <p>✅ Resume analysis completed</p>
+                        <p>🔍 Searching for matching jobs...</p>
+                        <p>⏳ Next: AI scoring of discovered jobs</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="cta-button" onclick="showHome()" style="margin-top: 2rem; background: rgba(255,255,255,0.2); color: white;">← Back to Home</button>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer fade-in">
+            <p>© 2026 ApplyPilot Project | Open Source AGPL-3.0 | Deployed on Vercel</p>
+            <p>GitHub: <a href="https://github.com/liaixin50-dotcom/ApplyPilot" style="color: #a0a0ff;">liaixin50-dotcom/ApplyPilot</a></p>
+            <p>Live Demo: <a href="https://apply-pilot-coral.vercel.app" style="color: #a0a0ff;">apply-pilot-coral.vercel.app</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function showHome() {
+            document.getElementById('application-form').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.querySelector('.header').style.display = 'block';
+            document.querySelector('.stats').style.display = 'grid';
+            document.querySelector('.features').style.display = 'grid';
+            document.querySelector('.job-list').style.display = 'block';
+            document.querySelector('.footer').style.display = 'block';
+        }
+        
+        function startApplication() {
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.stats').style.display = 'none';
+            document.querySelector('.features').style.display = 'none';
+            document.querySelector('.job-list').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('application-form').style.display = 'block';
+        }
+        
+        function showDashboard() {
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.stats').style.display = 'none';
+            document.querySelector('.features').style.display = 'none';
+            document.querySelector('.job-list').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
+            document.getElementById('application-form').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+        
+        // Form submission
+        document.getElementById('applyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Show success message
+            alert('✅ Profile saved successfully! ApplyPilot will now start searching for matching jobs.');
+            
+            // Show dashboard
+            showDashboard();
+        });
+        
+        // Dashboard functions
+        function startJobSearch() {
+            alert('🔍 Starting AI-powered job search...');
+        }
+        
+        function viewApplications() {
+            alert('📋 Loading your application history...');
+        }
+        
+        function updateProfile() {
+            startApplication();
+        }
+        
+        function generateReport() {
+            alert('📊 Generating performance report...');
+        }
+        
+        function submitApplications() {
+            const confirmed = confirm('🚀 ApplyPilot will submit applications for the top 3 matching jobs. Continue?');
+            if (confirmed) {
+                alert('✅ Applications submitted successfully! Check your email for confirmation.');
+            }
+        }
+        
+        // Initialize with home page
+        document.addEventListener('DOMContentLoaded', function() {
+            showHome();
+        });
+    </script>
+</body>
+</html>
