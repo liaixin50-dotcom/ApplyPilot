@@ -1,36 +1,93 @@
-"""ApplyPilot — AI Job Application Assistant (Vercel Deployment).
-
-This is the main entry point for Vercel deployment.
-It imports and runs the Streamlit app from the web_app/frontend directory.
+#!/usr/bin/env python3
+"""
+ApplyPilot Web Application - Main Entry Point
+Deploys the full Streamlit application on Vercel
 """
 
 import os
 import sys
+import subprocess
+from pathlib import Path
 
-# Add the web_app/frontend directory to the Python path
-frontend_path = os.path.join(os.path.dirname(__file__), "web_app", "frontend")
-sys.path.insert(0, frontend_path)
+def main():
+    """Main entry point for the application."""
+    print("🚀 ApplyPilot AI Job Application Assistant")
+    print("=" * 50)
+    
+    # Check if we're in a Vercel environment
+    is_vercel = os.environ.get("VERCEL") == "1"
+    
+    if is_vercel:
+        print("🌐 Running in Vercel environment")
+        print("📊 Starting Streamlit application...")
+        
+        # Set up environment for Streamlit
+        os.environ["STREAMLIT_SERVER_PORT"] = "8080"
+        os.environ["STREAMLIT_SERVER_ADDRESS"] = "0.0.0.0"
+        os.environ["STREAMLIT_SERVER_HEADLESS"] = "true"
+        os.environ["STREAMLIT_BROWSER_GATHER_USAGE_STATS"] = "false"
+        
+        # Run the Streamlit app
+        streamlit_app_path = Path(__file__).parent / "web_app" / "frontend" / "streamlit_app.py"
+        
+        if streamlit_app_path.exists():
+            print(f"📁 Found Streamlit app: {streamlit_app_path}")
+            
+            # Start Streamlit server
+            cmd = [
+                sys.executable, "-m", "streamlit", "run",
+                str(streamlit_app_path),
+                "--server.port", "8080",
+                "--server.address", "0.0.0.0",
+                "--server.headless", "true",
+                "--browser.gatherUsageStats", "false"
+            ]
+            
+            print(f"▶️  Starting: {' '.join(cmd)}")
+            
+            try:
+                # Run the Streamlit server
+                process = subprocess.Popen(cmd)
+                print("✅ Streamlit server started successfully")
+                print("🌍 Your application should be available at the Vercel URL")
+                
+                # Keep the process running
+                process.wait()
+                
+            except Exception as e:
+                print(f"❌ Error starting Streamlit: {e}")
+                return 1
+        else:
+            print(f"❌ Streamlit app not found at: {streamlit_app_path}")
+            print("📁 Available files in web_app/frontend/:")
+            frontend_dir = Path(__file__).parent / "web_app" / "frontend"
+            if frontend_dir.exists():
+                for file in frontend_dir.iterdir():
+                    print(f"  - {file.name}")
+            return 1
+    else:
+        print("💻 Local development mode")
+        print("📋 To run the full application locally:")
+        print("   1. cd web_app/frontend")
+        print("   2. streamlit run streamlit_app.py")
+        print("\n🚀 To deploy to Vercel:")
+        print("   1. Push this code to GitHub")
+        print("   2. Go to https://vercel.com")
+        print("   3. Import your repository")
+        print("   4. Deploy!")
+        
+        # Offer to start the app locally
+        response = input("\n▶️  Start the Streamlit app locally? (y/n): ")
+        if response.lower() == 'y':
+            streamlit_app_path = Path(__file__).parent / "web_app" / "frontend" / "streamlit_app.py"
+            if streamlit_app_path.exists():
+                print(f"🚀 Starting Streamlit app: {streamlit_app_path}")
+                os.chdir(streamlit_app_path.parent)
+                subprocess.run([sys.executable, "-m", "streamlit", "run", "streamlit_app.py"])
+            else:
+                print("❌ Streamlit app not found")
+    
+    return 0
 
-# Import the Streamlit app
-try:
-    from streamlit_app import main
-except ImportError:
-    # Fallback to the regular app if streamlit_app is not available
-    from app import main
-
-# Vercel requires a callable application
-# Streamlit apps are typically run via command line, but we can create a simple wrapper
-def handler(event, context):
-    """Vercel serverless function handler."""
-    # This is a placeholder - Streamlit doesn't work well with serverless functions
-    # We'll need to use a different approach
-    return {
-        "statusCode": 200,
-        "headers": {"Content-Type": "text/html"},
-        "body": "<html><body><h1>ApplyPilot AI Job Assistant</h1><p>Please use the Streamlit Cloud deployment for full functionality.</p></body></html>"
-    }
-
-# For local testing
 if __name__ == "__main__":
-    print("ApplyPilot - AI Job Application Assistant")
-    print("For Vercel deployment, please use the web_app/frontend/streamlit_app.py file directly.")
+    sys.exit(main())
